@@ -1,17 +1,27 @@
 import random
 
+
 media_sources = {
-    "CNA": {"MandName": "中央社",
+    "cna": {"MandName": "中央社",
             "url": ""},
-    "TVBS": {"MandName": "TVBS新聞",
+    "tvbs": {"MandName": "TVBS新聞",
              "url": ""},
-    "UDN": {"MandName": "聯合新聞網",
+    "udn": {"MandName": "聯合新聞網",
             "url": ""}
 }
 
-N_WORKERS = 3
-K = 2
-T = 0.1
+SCRAPER_SETTINGS = {
+    "cna": {
+        "base_url": "https://www.cna.com.tw/list/aall.aspx",
+        "K": 25,
+        "T": 0.1
+    },
+    "udn": {
+        "base_url": "https://udn.com/api/more",
+        "K": 2,
+        "T": 0.1
+    }
+}
 
 # 常用 User-Agent 列表 
 USER_AGENT_LIST = [

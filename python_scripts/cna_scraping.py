@@ -17,21 +17,23 @@ import json
 import time
 from tqdm import tqdm
 from multiprocessing import Pool
-from include.constants import *
+from utils.constants import *
 
 
 class CNA_scraper:
     def __init__(self, link) -> None:
         self.url     = link 
-        self.results = {}
         
         self.options = webdriver.ChromeOptions()
-        # self.options.add_argument("--headless=new")           # 無頭模式（不開視窗）
-        # self.options.add_argument("--no-sandbox")
+        self.options.add_argument("--headless=new")           # 無頭模式（不開視窗）
+        self.options.add_argument("--no-sandbox")
         self.options.add_argument("--disable-dev-shm-usage")  # 避免 shared memory 不夠用
         self.options.add_argument("--disable-gpu")            # 在某些 Linux 上避免錯誤
 
         self.driver  = webdriver.Chrome(self.options)
+
+        self.news_url_ls = []
+        self.scraped_results = []
 
 
         
@@ -68,119 +70,81 @@ class CNA_scraper:
         container = self.driver.find_element(By.ID, "jsMainList")
         news = container.find_elements(by = By.TAG_NAME, value = "li")
         news_url_ls = [_.find_element(By.TAG_NAME, "a").get_attribute("href") for _ in news]
+        self.news_url_ls = news_url_ls
         return news_url_ls
-    
-    
-    def split_batches(self, lst, n):
-        """將清單均分為 n 份"""
-        batch_size = math.ceil(len(lst) / n)
-        return [lst[i:i + batch_size] for i in range(0, len(lst), batch_size)]
     
     def quit(self):
         self.driver.quit()
         print("web driver quit successfully.")
 
-def scrape_news_batch(news_url_ls):
-    """用 for loop 逐個爬取輸入列表內的新聞連結"""
-    
+    def scrape_news_batch(self):
+        """用 for loop 逐個爬取輸入列表內的新聞連結"""
+        
 
-    batch_results = []
+        batch_results = []
 
-    for i, url in enumerate(tqdm(news_url_ls, "scraping individual news...")):
+        for i, url in enumerate(tqdm(self.news_url_ls, "scraping individual news...")):
 
-        try:
+            try:
 
-            headers = get_random_headers()
-            
-            body = requests.get(url, headers = headers)
-            soup = BeautifulSoup(body.text, 'html.parser')
+                headers = get_random_headers()
+                
+                body = requests.get(url, headers = headers)
+                soup = BeautifulSoup(body.text, 'html.parser')
 
-            article = soup.find("article")
-            title  = article.attrs["data-title"]
-            cate  = article.attrs["data-origin-type-name"]
-            url    = article.attrs["data-canonical-url"]
+                article = soup.find("article")
+                title  = article.attrs["data-title"]
+                cate  = article.attrs["data-origin-type-name"]
+                url    = article.attrs["data-canonical-url"]
 
 
-            datetime = (article
-                    .find("div", class_ = "updatetime")
-                    .find_all("span")[0]
-                    .text
-                    )
+                updated_time = (article
+                        .find("div", class_ = "updatetime")
+                        .find_all("span")[0]
+                        .text
+                        )
 
-            # update_time = dt.datetime.strptime(datetime, "%Y/%m/%d %H:%M")
-            update_time = datetime
+                updated_time = dt.datetime.strptime(updated_time, "%Y/%m/%d %H:%M")
+                
 
-            body = article.find("div", class_ = "paragraph")
-            content = "\n".join(
-                [
-                    p.text for p in (body.find_all("p"))
+                body = article.find("div", class_ = "paragraph")
+                content = "\n".join(
+                    [
+                        p.text for p in (body.find_all("p"))
+                    ]
+                )
+                keywords = [
+                    kw.text for kw in article.find_all("div", class_ = "keywordTag")
                 ]
-            )
-            keywords = [
-                kw.text for kw in article.find_all("div", class_ = "keywordTag")
-            ]
-            
-            batch_results.append(
-                                    {
-                                        "title": title,
-                                        "url": url,
-                                        "type": cate,
-                                        "updated_time": update_time,
-                                        "content": content,
-                                        "keywords": keywords
-                                     }
-                                ) 
-            
-        except Exception as e:
-            batch_results.append(
-                {
-                    "url": url,
-                    "error": str(e)
-                }
-            )
+                
+                batch_results.append(
+                                        {
+                                            "title": title,
+                                            "url": url,
+                                            "type": cate,
+                                            "updated_time": updated_time,
+                                            "content": content,
+                                            "keywords": keywords
+                                        }
+                                    ) 
+                
+            except Exception as e:
+                batch_results.append(
+                    {
+                        "url": url,
+                        "error": str(e)
+                    }
+                )
 
-            continue
-
-    return batch_results
+                continue
+        
+        self.scraped_results = batch_results
+        return batch_results
 
 
-def CNA_SCRAPER(k, t):
-    # --- 取得新聞連結列表
-    logging.info("start scraping cna news...")
-    cna = CNA_scraper("https://www.cna.com.tw/list/aall.aspx")
-
-    logging.info("start driver...")
-    cna.start_cna_driver()
-
-    logging.info("click more button...")
-    cna.click_more_btn(k = k, t = t)
-
-    logging.info("get news url list...")
-    urls = cna.get_news_url_ls()
-    
-    # logging.info("split urls into batches...")
-    # url_batches = cna.split_batches(urls, N_WORKERS)
-
-    cna.quit()
-    
-    # --- 多進程分批爬取新聞
-    logging.info("start scraping individual news...")
-    all_results = scrape_news_batch(urls)
-    # with Pool(processes = N_WORKERS) as pool:
-    #     all_results = list(tqdm(pool.map(scrape_news_batch, url_batches), total = N_WORKERS))
-
-    logging.info("done!")
-    return all_results
-    
-def CNA_SAVE(results):
-    with open("./results.json", "w", encoding = "utf-8") as f:
-        json.dump(results, f, ensure_ascii = False, indent = 4)
 
 if __name__ == "__main__":
-    results = CNA_SCRAPER(K, T)
-    with open("./results.json", "w", encoding = "utf-8") as f:
-        json.dump(results, f, ensure_ascii = False, indent = 4)
-
+    pass
 
 
 
