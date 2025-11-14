@@ -58,11 +58,14 @@ class MongoDbManager:
 
                 print("result of removing duplicates: ", delete_result)
 
+            return {"removed_count": len(ids_to_delete)}
 
         except Exception as e:
             raise Exception("Failed to remove duplicates due to the following error: ", e)
 
-
+    def COUNT_DOCUMENT(self, collection_name):
+        db = self.client.get_database("news_scrape")
+        return db[collection_name].count_documents({})
 
     def CLOSE(self):
         self.client.close()
