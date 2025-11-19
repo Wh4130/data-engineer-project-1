@@ -69,15 +69,15 @@ async def main():
 
     tasks = [
         asyncio.to_thread(UDN_ETL),
-        asyncio.to_thread(CNA_ETL),
-        asyncio.to_thread(TVBS_ETL)
+        asyncio.to_thread(CNA_ETL)
+        # asyncio.to_thread(TVBS_ETL)
     ]
 
     tasks_results = await asyncio.gather(*tasks)
     results = {
         "udn": tasks_results[0],
-        "cna": tasks_results[1],
-        "tvbs": tasks_results[2]
+        "cna": tasks_results[1]
+     #   "tvbs": tasks_results[2]
 
     }
 
