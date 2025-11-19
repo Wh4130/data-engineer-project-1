@@ -69,7 +69,7 @@ async def main():
 
     tasks = [
         asyncio.to_thread(UDN_ETL),
-        asyncio.to_thread(CNA_ETㄣL)
+        asyncio.to_thread(CNA_ETㄣL),
         asyncio.to_thread(TVBS_ETL)
     ]
 
