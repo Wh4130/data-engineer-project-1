@@ -35,7 +35,7 @@ def CNA_ETL(k = SCRAPER_SETTINGS['cna']['K'] , t = SCRAPER_SETTINGS['cna']['T'])
         cna.quit()
         
         print("[cna] start scraping individual news...")
-        cna.scrape_news_batch()
+        cna.scrape_news_batch(t)
 
         print("[cna] Done scraping! Loading to MongoDB atlas...")
 
@@ -54,6 +54,7 @@ def CNA_ETL(k = SCRAPER_SETTINGS['cna']['K'] , t = SCRAPER_SETTINGS['cna']['T'])
             "count_before": count_before,
             "count_after": count_after,
             "removed_count": removed_count,
+            "errors": len(cna.errors),
             "duration": end - begin
         }              
 

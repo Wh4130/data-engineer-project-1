@@ -14,17 +14,18 @@ media_sources = {
 SCRAPER_SETTINGS = {
     "cna": {
         "base_url": "https://www.cna.com.tw/list/aall.aspx",
-        "K": 4,
+        "K": 3,
         "T": 0.1
     },
     "udn": {
         "base_url": "https://udn.com/api/more",
-        "K": 8,
+        "K": 5,
         "T": 0.1
     },
-    "tvbs": {
-        "base_url": "https://news.tvbs.com.tw/realtime",
-        "p": 0.3
+    "ltn": {
+        "base_url": "https://news.ltn.com.tw/ajax/breakingnews/all",
+        "K": 5,
+        "T": 0.1
     }
 }
 

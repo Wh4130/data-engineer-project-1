@@ -1,6 +1,6 @@
 from pipelines.cna_etl import CNA_ETL
 from pipelines.udn_etl import UDN_ETL
-from pipelines.tvbs_etl import TVBS_ETL
+from pipelines.ltn_etl import LTN_ETL
 from utils.email_sender import EmailSender
 
 import asyncio
@@ -69,15 +69,15 @@ async def main():
 
     tasks = [
         asyncio.to_thread(UDN_ETL),
-        asyncio.to_thread(CNA_ETL)
-        # asyncio.to_thread(TVBS_ETL)
+        asyncio.to_thread(CNA_ETL),
+        asyncio.to_thread(LTN_ETL)
     ]
 
     tasks_results = await asyncio.gather(*tasks)
     results = {
         "udn": tasks_results[0],
-        "cna": tasks_results[1]
-     #   "tvbs": tasks_results[2]
+        "cna": tasks_results[1],
+        "ltn": tasks_results[2]
 
     }
 

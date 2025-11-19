@@ -34,6 +34,7 @@ class CNA_scraper:
 
         self.news_url_ls = []
         self.scraped_results = []
+        self.errors = []
 
 
         
@@ -77,11 +78,10 @@ class CNA_scraper:
         self.driver.quit()
         print("web driver quit successfully.")
 
-    def scrape_news_batch(self):
+    def scrape_news_batch(self, t):
         """用 for loop 逐個爬取輸入列表內的新聞連結"""
         
 
-        batch_results = []
 
         for url in self.news_url_ls:
 
@@ -117,7 +117,7 @@ class CNA_scraper:
                     kw.text for kw in article.find_all("div", class_ = "keywordTag")
                 ]
                 
-                batch_results.append(
+                self.scraped_results.append(
                                         {
                                             "title": title,
                                             "url": url,
@@ -129,7 +129,7 @@ class CNA_scraper:
                                     ) 
                 
             except Exception as e:
-                batch_results.append(
+                self.errors.append(
                     {
                         "url": url,
                         "error": str(e)
@@ -137,9 +137,10 @@ class CNA_scraper:
                 )
 
                 continue
+
+            time.sleep(random.normalvariate(t, t / 10))
         
-        self.scraped_results = batch_results
-        return batch_results
+        return self.scraped_results
 
 
 

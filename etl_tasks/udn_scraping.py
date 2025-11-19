@@ -25,6 +25,7 @@ class UDN_scraper:
         self.base_url = base_url
         self.news_url_ls = []
         self.scraped_results = []
+        self.errors = []
 
     def get_news_list(self, page_num, t):
 
@@ -47,11 +48,9 @@ class UDN_scraper:
         self.news_url_ls = news_list
         return news_list
     
-    def scrape_news_batch(self):
+    def scrape_news_batch(self, t):
         """用 for loop 逐個爬取輸入列表內的新聞連結"""
         
-
-        batch_results = []
 
         for news in self.news_url_ls:
 
@@ -87,7 +86,7 @@ class UDN_scraper:
                     kw.text for kw in kw_container.find_all("a")
                 ]
                 
-                batch_results.append(
+                self.scraped_results.append(
                                         {
                                             "title": title,
                                             "url": url,
@@ -99,7 +98,7 @@ class UDN_scraper:
                                     ) 
                 
             except Exception as e:
-                batch_results.append(
+                self.errors.append(
                     {
                         "url": url,
                         "error": str(e)
@@ -107,4 +106,6 @@ class UDN_scraper:
                 )
                 continue
 
-        self.scraped_results = batch_results
+            time.sleep(random.normalvariate(t, t / 10))
+
+        

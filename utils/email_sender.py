@@ -37,6 +37,13 @@ class EmailSender:
             <span style="color:#7ea6c8;"># added:</span>
             <span style="color:#39ff14;font-weight:bold;font-size:1.1em;text-align:right;min-width:60px;">{results['cna']['count_after'] - results['cna']['count_before']}</span>
         </li>
+        <li style="display:flex;justify-content:space-between;padding:6px 0;">
+            <span style="color:#7ea6c8;"># errors:</span>
+            <span style="color:#39ff14;font-weight:bold;font-size:1.1em;text-align:right;min-width:60px;">{results['cna']['errors']}</span>
+        </li>
+        <li style="display:flex;justify-content:space-between;padding:6px 0;">
+            <span style="color:#39ff14;font-weight:bold;font-size:1.1em;text-align:right;min-width:60px;">{results['cna']['duration']}</span>
+        </li>
     </ul>
 
     <h3 style="color:#5c7c99;font-size:16px;margin:15px 0 5px 0;">UDN</h3>
@@ -56,6 +63,39 @@ class EmailSender:
         <li style="display:flex;justify-content:space-between;padding:6px 0;">
             <span style="color:#7ea6c8;"># added:</span>
             <span style="color:#39ff14;font-weight:bold;font-size:1.1em;text-align:right;min-width:60px;">{results['udn']['count_after'] - results['udn']['count_before']}</span>
+        </li>
+        <li style="display:flex;justify-content:space-between;padding:6px 0;">
+            <span style="color:#7ea6c8;"># errors:</span>
+            <span style="color:#39ff14;font-weight:bold;font-size:1.1em;text-align:right;min-width:60px;">{results['udn']['errors']}</span>
+        </li>
+        <li style="display:flex;justify-content:space-between;padding:6px 0;">
+            <span style="color:#39ff14;font-weight:bold;font-size:1.1em;text-align:right;min-width:60px;">{results['udn']['duration']}</span>
+        </li>
+    </ul>
+    <h3 style="color:#5c7c99;font-size:16px;margin:15px 0 5px 0;">LTN</h3>
+    <ul style="list-style:none;padding:0;margin:0;">
+        <li style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #cccccc;">
+            <span style="color:#7ea6c8;"># before:</span>
+            <span style="color:#a8c4dd;font-weight:bold;text-align:right;min-width:60px;">{results['ltn']['count_before']}</span>
+        </li>
+        <li style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #cccccc;">
+            <span style="color:#7ea6c8;"># after:</span>
+            <span style="color:#a8c4dd;font-weight:bold;text-align:right;min-width:60px;">{results['ltn']['count_after']}</span>
+        </li>
+        <li style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #cccccc;">
+            <span style="color:#7ea6c8;"># removed:</span>
+            <span style="color:#ff9900;font-weight:bold;text-align:right;min-width:60px;">{results['ltn']['removed_count']}</span>
+        </li>
+        <li style="display:flex;justify-content:space-between;padding:6px 0;">
+            <span style="color:#7ea6c8;"># added:</span>
+            <span style="color:#39ff14;font-weight:bold;font-size:1.1em;text-align:right;min-width:60px;">{results['ltn']['count_after'] - results['ltn']['count_before']}</span>
+        </li>
+        <li style="display:flex;justify-content:space-between;padding:6px 0;">
+            <span style="color:#7ea6c8;"># errors:</span>
+            <span style="color:#39ff14;font-weight:bold;font-size:1.1em;text-align:right;min-width:60px;">{results['ltn']['errors']}</span>
+        </li>
+        <li style="display:flex;justify-content:space-between;padding:6px 0;">
+            <span style="color:#39ff14;font-weight:bold;font-size:1.1em;text-align:right;min-width:60px;">{results['ltn']['duration']}</span>
         </li>
     </ul>
 

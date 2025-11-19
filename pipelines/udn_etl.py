@@ -25,7 +25,7 @@ def UDN_ETL(k = SCRAPER_SETTINGS['udn']['K'], t = SCRAPER_SETTINGS['udn']['T']):
         udn.get_news_list(k, t)
         
         print("[udn] start scraping individual news...")
-        udn.scrape_news_batch()
+        udn.scrape_news_batch(t)
 
         print("[udn] Done scraping! Loading to MongoDB atlas...")
 
@@ -44,6 +44,7 @@ def UDN_ETL(k = SCRAPER_SETTINGS['udn']['K'], t = SCRAPER_SETTINGS['udn']['T']):
                     "count_before": count_before,
                     "count_after": count_after,
                     "removed_count": removed_count,
+                    "errors": len(udn.errors),
                     "duration": end - begin
                 }   
 
