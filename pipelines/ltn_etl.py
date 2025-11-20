@@ -15,7 +15,7 @@ load_dotenv()
 import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
-def LTN_ETL(k = SCRAPER_SETTINGS['udn']['K'], t = SCRAPER_SETTINGS['udn']['T']):
+def LTN_ETL(k = SCRAPER_SETTINGS['ltn']['K'], t = SCRAPER_SETTINGS['ltn']['T']):
     try:
         begin = dt.datetime.now()
 
@@ -53,4 +53,5 @@ def LTN_ETL(k = SCRAPER_SETTINGS['udn']['K'], t = SCRAPER_SETTINGS['udn']['T']):
     except Exception as e:
 
         EmailSender.send(os.getenv("RECIPIENT"), f"Error occurred:\n\n {e}")
+        raise e
     

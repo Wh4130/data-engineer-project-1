@@ -3,12 +3,14 @@ from pydantic import BaseModel
 
 
 media_sources = {
-    "cna": {"MandName": "中央社",
-            "url": ""},
-    "tvbs": {"MandName": "TVBS新聞",
-             "url": ""},
-    "udn": {"MandName": "聯合新聞網",
-            "url": ""}
+    "cna": {"MandName": "中央社"},
+    "ltn": {"MandName": "自由時報"},
+    "udn": {"MandName": "聯合新聞網"}
+}
+color_mapping = {
+    "中央社": "#6372f2",
+    "自由時報": "#77c990",
+    "聯合新聞網": "#ebab88"
 }
 
 SCRAPER_SETTINGS = {
@@ -19,12 +21,12 @@ SCRAPER_SETTINGS = {
     },
     "udn": {
         "base_url": "https://udn.com/api/more",
-        "K": 5,
+        "K": 7,
         "T": 0.1
     },
     "ltn": {
         "base_url": "https://news.ltn.com.tw/ajax/breakingnews/all",
-        "K": 5,
+        "K": 6,
         "T": 0.1
     }
 }
@@ -78,3 +80,8 @@ def get_random_headers():
         "Referer": random.choice(USER_AGENT_LIST)
     }
 
+# * ------------------------------------------------------------------------------
+# --- wordcloud
+DICTIONARY_PATH = "assets/dictionary.txt"
+STOPWORDS_PATH = "assets/stopwords.txt"
+FONT_PATH = "assets/font.ttf"

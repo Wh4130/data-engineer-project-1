@@ -124,7 +124,8 @@ class CNA_scraper:
                                             "type": cate,
                                             "updated_time": updated_time,
                                             "content": content,
-                                            "keywords": keywords
+                                            "keywords": keywords,
+                                            "len": len(content)
                                         }
                                     ) 
                 

@@ -68,20 +68,21 @@ $ adopted! cost 1 usd per month.
 async def main():
 
     tasks = [
-        asyncio.to_thread(UDN_ETL),
-        asyncio.to_thread(CNA_ETL),
+        # asyncio.to_thread(UDN_ETL),
+        # asyncio.to_thread(CNA_ETL),
         asyncio.to_thread(LTN_ETL)
     ]
 
     tasks_results = await asyncio.gather(*tasks)
     results = {
-        "udn": tasks_results[0],
-        "cna": tasks_results[1],
-        "ltn": tasks_results[2]
+        # "udn": tasks_results[0],
+        # "cna": tasks_results[1],
+        "ltn": tasks_results[0]
 
     }
+    print(results['ltn'])
 
-    print(EmailSender.send(os.getenv("RECIPIENT"), EmailSender.template(results)))
+    # print(EmailSender.send(os.getenv("RECIPIENT"), EmailSender.template(results)))
 
 
 if __name__ == "__main__":

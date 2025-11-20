@@ -7,3 +7,6 @@ pandas
 fastapi
 uvicorn[standard]
 pymongo
+wordcloud
+jieba
+plotly

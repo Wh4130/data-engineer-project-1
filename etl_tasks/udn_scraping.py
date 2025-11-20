@@ -93,6 +93,7 @@ class UDN_scraper:
                                             "type": cates,
                                             "updated_time": updated_time,
                                             "content": content,
+                                            "len": len(content),
                                             "keywords": keywords
                                         }
                                     ) 

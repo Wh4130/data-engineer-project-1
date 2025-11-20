@@ -61,9 +61,9 @@ class LTN_scraper:
             r = requests.get(news_list_url, headers = get_random_headers())
             news_data = r.json()
 
-            if page == 1:
+            if isinstance(news_data['data'], list):
                 news_list.extend(news_data['data'])
-            else:
+            elif isinstance(news_data['data'], dict):
                 news_list.extend(
                     news_data['data'].values()
                 )
@@ -150,7 +150,7 @@ class LTN_scraper:
     def scrape_news_batch(self, t):
         """用 for loop 逐個爬取輸入列表內的新聞連結"""
 
-        for i, news in enumerate(self.news_url_ls):
+        for i, news in tqdm(enumerate(self.news_url_ls), total = len(self.news_url_ls)):
             try:
                 # * 取得 soup 以及新聞基本資訊
                 soup, result = self.get_news_soup_and_info(news)
@@ -159,26 +159,30 @@ class LTN_scraper:
                 if news['url'].startswith("https://news.ltn.com.tw/news/def") :
                     result.update(
                         {
-                            "content": self.ByCategory.defense(soup)
+                            "content": self.ByCategory.defense(soup),
+                            "len": len(self.ByCategory.defense(soup))
                         }
                     )
                 elif news['url'].startswith("https://ec"):
                     result.update(
                         {
-                            "content": self.ByCategory.economics(soup)
+                            "content": self.ByCategory.economics(soup),
+                            "len": len(self.ByCategory.economics(soup))
                         }
                     )
                 elif news['url'].startswith("https://health"):
                     result.update(
                         {
                             "content": self.ByCategory.health(soup),
-                            "type": "健康"
+                            "type": "健康",
+                            "len": len(self.ByCategory.health(soup))
                         }
                     )
                 elif news['url'].startswith("https://news"):
                     result.update(
                         {
-                            "content": self.ByCategory.normal(soup)
+                            "content": self.ByCategory.normal(soup),
+                            "len": len(self.ByCategory.normal(soup))
                         }
                     )
                 else:
