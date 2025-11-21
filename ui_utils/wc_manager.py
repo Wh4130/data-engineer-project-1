@@ -5,6 +5,7 @@ import jieba.analyse
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 import numpy as np 
+from PIL import Image
 import random
 import re
 from collections import Counter
@@ -19,6 +20,8 @@ class WordCloudManager:
         x, y = np.ogrid[:300, :300]
         mask = (x - 150)**2 + (y - 150)**2 > 150**2
         mask = 255 * mask.astype(int)
+
+        mask = np.array(Image.open("./assets/filter.png"))
         '''
         text should be separated by comma
         '''
@@ -45,7 +48,7 @@ class WordCloudManager:
             random_state = 1214,
             width = width,
             height = height,
-            # mask = mask
+            mask = mask
         ).generate_from_frequencies(freq)
 
 

@@ -16,12 +16,12 @@ color_mapping = {
 SCRAPER_SETTINGS = {
     "cna": {
         "base_url": "https://www.cna.com.tw/list/aall.aspx",
-        "K": 15,
+        "K": 5,
         "T": 0.1
     },
     "udn": {
         "base_url": "https://udn.com/api/more",
-        "K": 30,
+        "K": 5,
         "T": 0.1
     },
     "ltn": {

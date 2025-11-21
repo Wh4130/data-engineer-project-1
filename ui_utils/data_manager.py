@@ -51,7 +51,7 @@ class MongoDbManager:
             _self, 
             time_interval: list[dt.datetime]):      
         
-        collections = _self.database.list_collection_names()
+        collections = media_sources.keys()
         df_list = []
         for collection in collections:
             res = _self.SELECT_BY_TIME(

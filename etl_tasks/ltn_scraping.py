@@ -97,7 +97,6 @@ class LTN_scraper:
                             .strptime(
                             updated_time , "%Y-%m-%d %H:%M"
                             )
-                            .replace(tzinfo = ZoneInfo("Asia/Taipei"))
             )
             type_cn = news['type_cn']
 
