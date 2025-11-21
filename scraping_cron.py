@@ -77,7 +77,7 @@ async def main():
     results = {
         "udn": tasks_results[0],
         "cna": tasks_results[1],
-        "ltn": tasks_results[0]
+        "ltn": tasks_results[2]
 
     }
     
