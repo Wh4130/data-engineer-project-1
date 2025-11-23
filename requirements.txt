@@ -10,3 +10,4 @@ pymongo
 wordcloud
 jieba
 plotly
+scipy
