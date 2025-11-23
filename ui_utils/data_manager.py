@@ -37,8 +37,10 @@ class MongoDbManager:
                 }
             }
         ]
-        client.close()
         df = pd.DataFrame(database[collection_name].aggregate(pipeline))
+
+        client.close()
+
 
         # *** udn 文章類別 特別處理
         if collection_name == "udn":
