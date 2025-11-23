@@ -13,7 +13,7 @@ class UIManager:
             
             st.write(" ")
             st.header("Taiwanese Media Dashboard")
-            st.caption(f"**Literature Review Tool**")
+            # st.caption(f"**Literature Review Tool**")
 
             # * Pages
             st.page_link("./pages/page_about.py", label = 'About this app', icon = ":material/help:")
