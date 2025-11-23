@@ -14,6 +14,7 @@ from ui_utils.wc_manager import WordCloudManager
 from ui_utils.ui_manager import UIManager, P1_Keywords
 
 import datetime as dt
+from zoneinfo import ZoneInfo
 st.title("Taiwan Media Dashboard")
 
 # * ------------------------------------------------------------------------------
@@ -80,8 +81,8 @@ with BOX1:
         time1 = st.time_input("start time")
         time2 = st.time_input("end time")
 
-    dt1 = dt.datetime.combine(day1, time1).replace(tzinfo = None)
-    dt2 = dt.datetime.combine(day2, time2).replace(tzinfo = None)
+    dt1 = dt.datetime.combine(day1, time1).replace(tzinfo = ZoneInfo("Asia/Taipei"))
+    dt2 = dt.datetime.combine(day2, time2).replace(tzinfo = ZoneInfo("Asia/Taipei"))
 
 
     # * apply change on time interval
