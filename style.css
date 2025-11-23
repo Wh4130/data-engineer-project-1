@@ -3,7 +3,7 @@
 .data-pair-container {
     display: flex;
     /* 使用 space-around 或 space-between 來分隔兩個數據塊 */
-    justify-content: center; 
+    justify-content: space-around; 
     width: 200px; /* 設定一個合適的寬度 */
     text-align: center; /* 讓容器內文字居中 */
 }
