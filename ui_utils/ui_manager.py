@@ -9,16 +9,11 @@ class UIManager:
     def render_sidebar():
         with st.sidebar:
             
-            # * Icon & Title
-            text_box, icon_box = st.columns((0.8, 0.2))
-            with icon_box:
-                st.markdown(f'''
-                                <img class="image" src="data:image/jpeg;base64,{DataTools.image_to_b64(f"./assets/icon.png")}" alt="III Icon" style="width:500px;">
-                            ''', unsafe_allow_html = True)
-            with text_box:
-                st.write(" ")
-                st.header("Taiwanese Media Dashboard")
-                st.caption(f"**Literature Review Tool**")
+            # * Title
+            
+            st.write(" ")
+            st.header("Taiwanese Media Dashboard")
+            st.caption(f"**Literature Review Tool**")
 
             # * Pages
             st.page_link("./pages/page_about.py", label = 'About this app', icon = ":material/help:")
