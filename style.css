@@ -1,0 +1,34 @@
+/* --- Basic Statistics ---*/
+/* Second metric */
+.data-pair-container {
+    display: flex;
+    /* 使用 space-around 或 space-between 來分隔兩個數據塊 */
+    justify-content: space-around; 
+    width: 200px; /* 設定一個合適的寬度 */
+    text-align: center; /* 讓容器內文字居中 */
+}
+.data-block {
+    display: flex;
+    flex-direction: column; /* 數字和標籤垂直堆疊 */
+    align-items: center;    /* 垂直對齊時，確保內容居中 */
+}
+.data-number {
+    font-size: 1.5em; /* 讓數字更大更顯眼 */
+    font-weight: bold
+}
+.data-number.filtered {
+    color: #4747ad
+}
+.data-number.source {
+    color: #023332
+}
+.data-number.date {
+    color: #326da8
+}
+.data-label {
+    font-size: 0.8em;
+    color: #666; /* 讓標籤顏色稍微淡一點 */
+}
+.data-label.time {
+    font-size: 1em;
+}

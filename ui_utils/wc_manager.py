@@ -17,46 +17,48 @@ class WordCloudManager:
     @staticmethod
     def worcdloud_generate(data, width = 400, height = 600):
 
-        x, y = np.ogrid[:300, :300]
-        mask = (x - 150)**2 + (y - 150)**2 > 150**2
-        mask = 255 * mask.astype(int)
+        with st.spinner("generating wordcloud..."):
 
-        mask = np.array(Image.open("./assets/filter.png"))
-        '''
-        text should be separated by comma
-        '''
-        text = ' '.join(data.loc[:, 'content'].astype(str)).replace(' ', ', ')
+            x, y = np.ogrid[:300, :300]
+            mask = (x - 150)**2 + (y - 150)**2 > 150**2
+            mask = 255 * mask.astype(int)
 
-        jieba.set_dictionary(DICTIONARY_PATH)
-        jieba.analyse.set_stop_words(STOPWORDS_PATH)
+            mask = np.array(Image.open("./assets/filter.png"))
+            '''
+            text should be separated by comma
+            '''
+            text = ' '.join(data.loc[:, 'content'].astype(str)).replace(' ', ', ')
 
-        tags = jieba.analyse.extract_tags(text, topK = 50)
-        seg_list = jieba.lcut(text, cut_all = False)
-        dictionary = Counter(seg_list)
+            jieba.set_dictionary(DICTIONARY_PATH)
+            jieba.analyse.set_stop_words(STOPWORDS_PATH)
 
-        freq = {}
-        for ele in dictionary:
-            if ele in tags:
-                if not re.match(r"\d+", ele):
-                    freq[ele] = dictionary[ele]
+            tags = jieba.analyse.extract_tags(text, topK = 50)
+            seg_list = jieba.lcut(text, cut_all = False)
+            dictionary = Counter(seg_list)
 
-        # Create and generate a word cloud image:
-        wordcloud = WordCloud(
-            background_color=None,  # No background color
-            mode='RGBA',             # Enable transparency
-            font_path=FONT_PATH,
-            random_state = 1214,
-            width = width,
-            height = height,
-            mask = mask
-        ).generate_from_frequencies(freq)
+            freq = {}
+            for ele in dictionary:
+                if ele in tags:
+                    if not re.match(r"\d+", ele):
+                        freq[ele] = dictionary[ele]
+
+            # Create and generate a word cloud image:
+            wordcloud = WordCloud(
+                background_color=None,  # No background color
+                mode='RGBA',             # Enable transparency
+                font_path=FONT_PATH,
+                random_state = 1214,
+                width = width,
+                height = height,
+                mask = mask
+            ).generate_from_frequencies(freq)
 
 
-        fig, ax = plt.subplots(1, 1)
-        ax.imshow(wordcloud, interpolation = 'bilinear')
-        ax.axis('off')
-        fig.patch.set_alpha(0)
+            fig, ax = plt.subplots(1, 1)
+            ax.imshow(wordcloud, interpolation = 'bilinear')
+            ax.axis('off')
+            fig.patch.set_alpha(0)
 
-        return freq, fig
-    
+            return freq, fig
+        
     

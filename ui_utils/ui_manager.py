@@ -21,8 +21,10 @@ class UIManager:
                 st.caption(f"**Literature Review Tool**")
 
             # * Pages
-            st.page_link("dashboard.py", label = 'Dashboard', icon = ":material/bubble_chart:")
-            st.page_link("./pages/page_raw.py", label = '新聞資料下載', icon = ":material/folder_open:")
+            st.page_link("./pages/page_about.py", label = 'About this app', icon = ":material/help:")
+            st.page_link("dashboard.py", label = 'Dashboard', icon = ":material/widgets:")
+            st.page_link("./pages/page_query.py", label = 'News Querying Tool', icon = ":material/feature_search:")
+
                 
 class P1_Keywords:
 
@@ -32,9 +34,9 @@ class P1_Keywords:
         return pd.Series([kw for kw_ls in keywords if isinstance(kw_ls, list) for kw in kw_ls ]).value_counts().to_dict()
     
     @staticmethod
-    def get_top_3_tags(data):
+    def get_top_k_tags(data, k):
         kws = P1_Keywords.kw_trans_func(data['keywords'])
-        return list(kws.keys())[:3]
+        return list(kws.keys())[:k]
 
 
     @staticmethod
@@ -61,8 +63,6 @@ class P1_Keywords:
         st.metric(f"#:blue[**{tag}**]", 
                   tag_series[-1], 
                   delta = tag_series[-1] - tag_series[-2], 
-                  chart_data = tag_series)
+                  chart_data = tag_series,
+                  border = True)
 
-
-# with cols[2]:
-#     st.metric(f"**{tag}**", sum(tag_series), delta = 0, chart_data = tag_series)

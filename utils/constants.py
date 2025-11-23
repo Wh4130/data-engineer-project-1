@@ -9,8 +9,8 @@ media_sources = {
 }
 color_mapping = {
     "中央社": "#6372f2",
-    "自由時報": "#77c990",
-    "聯合新聞網": "#ebab88"
+    "自由時報": "#d1de7c",
+    "聯合新聞網": "#de858e"
 }
 
 SCRAPER_SETTINGS = {
