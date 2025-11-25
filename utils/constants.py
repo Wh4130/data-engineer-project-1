@@ -21,7 +21,7 @@ SCRAPER_SETTINGS = {
     },
     "udn": {
         "base_url": "https://udn.com/api/more",
-        "K": 5,
+        "K": 8,
         "T": 0.1
     },
     "ltn": {
