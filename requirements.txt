@@ -11,3 +11,4 @@ wordcloud
 jieba
 plotly
 scipy
+ckiptagger

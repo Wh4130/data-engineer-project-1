@@ -114,7 +114,7 @@ class CNA_scraper:
                     ]
                 )
                 keywords = [
-                    kw.text for kw in article.find_all("div", class_ = "keywordTag")
+                    kw.text.replace("#", "") for kw in article.find_all("div", class_ = "keywordTag")
                 ]
                 
                 self.scraped_results.append(

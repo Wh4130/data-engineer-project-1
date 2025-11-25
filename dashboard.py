@@ -30,6 +30,9 @@ st.set_page_config(page_title = "Media Analytics Tool",
 - Developed by - **[Wally, Huang Lin Chun](https://antique-turn-ad4.notion.site/Wally-Huang-Lin-Chun-182965318fa7804c86bdde557fa376f4)**"""
     })
 
+# *** --- Load css style sheet ---
+with open("style.css") as style_sheet:
+            st.markdown(f"<style>{style_sheet.read()}</style>", unsafe_allow_html = True)
 
 UIManager.render_sidebar()
 
@@ -136,7 +139,7 @@ if on_click:
     st.cache_data.clear()
 
     # - at least two hours
-    cond = dt2 - dt1 >= dt.timedelta(hours = 2)
+    cond = dt2 - dt1 >= dt.timedelta(days = 2)
 
     if not cond:
         st.error("Please select a time interval of at least **two days**.")
@@ -149,20 +152,26 @@ if on_click:
 
 # * ------------------------------------------------------------------------------
 # *** --- slice the source data by filter set by the user
+# """sliced_data: for dashboard block other than keyword trend"""
+# """sliced_data_kwt: for dashboard block 'keyword trend' (first block)"""
 sliced_data = st.session_state['dashboard']['df_full'][
     (st.session_state['dashboard']['df_full']['source'].isin(input_sources))
+]
+sliced_data_kwt = st.session_state['dashboard']['df_7day'][
+    (st.session_state['dashboard']['df_7day']['source'].isin(input_sources))
 ]
 
 sliced_data = sliced_data[
     (sliced_data['type'].isin(input_types))
 ]
+sliced_data_kwt = sliced_data_kwt[
+    (sliced_data_kwt['type'].isin(input_types))
+]
 
-if sliced_data.empty:
+if sliced_data.empty or sliced_data_kwt.empty:
     st.error("No data available! Loose your filter to get more data.")
     st.stop()
 
-# TODO 0. 新的頁面：Setting
-# - updated time bin size
 
 # ---
 # F2 - pie chart
@@ -229,9 +238,10 @@ with st.container():
 
     cols_r2 = st.columns(3)
 
-    for i, tag in zip([0, 1, 2], P1_Keywords.get_top_k_tags(st.session_state['dashboard']['df_7day'], 3)):
+# st.session_state['dashboard']['df_7day']
+    for i, tag in zip([0, 1, 2], P1_Keywords.get_top_k_tags(sliced_data_kwt, 3)):
         with cols_r2[i]:
-            tag_series = P1_Keywords.get_kw_count_ts(st.session_state['dashboard']['df_7day'], tag)
+            tag_series = P1_Keywords.get_kw_count_ts(sliced_data_kwt, tag)
             P1_Keywords.plot_single_kw_count(tag, tag_series)
 
 # *** ------------------------------------------
@@ -261,8 +271,7 @@ with st.container():
 
     with cols_r1[1].container(border = True, height = 165):
         st.markdown("###### **:gray[Article Count]**", help = "The number of articles in the filtered news data.")
-        with open("style.css") as style_sheet:
-            st.markdown(f"<style>{style_sheet.read()}</style>", unsafe_allow_html = True)
+        
         st.markdown(f"""
     <div class="data-pair-container">
         <div class="data-block">

@@ -3,6 +3,7 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 import datetime as dt
 import os
+import numpy as np
 import asyncio
 import pandas as pd
 import base64
@@ -96,6 +97,75 @@ class MongoDbManager:
         # st.write(f"Time spent: {end - begin}")
         return pd.concat([df for df in df_list if not df.empty], ignore_index = True)
     
+    @staticmethod
+    def SELECT_BY_KEYWORD(collection_name, time_interval: list[dt.datetime], keyword: str):
+        client = MongoClient(st.secrets["MONGO_URI"])
+        database = client.get_database("news_scrape")
+
+        database[collection_name].create_index([
+            ('title', 'text'),
+            ('content', 'text')
+        ], name='title_content_text_index')
+
+        if keyword == "":
+            pipeline = [
+                {
+                    "$match": {
+                        "updated_time": {
+                            "$gte": time_interval[0],
+                            "$lte": time_interval[1]
+                        },
+                         "title": {
+                        "$exists": True
+                        }
+                    }
+                }
+            ]
+        else:
+            pipeline = [
+                {
+                    "$match": {
+                        # 💡 關鍵字全文搜尋條件 (Text Search must be handled by $text)
+                        "$text": {
+                            "$search": keyword
+                        },
+                        
+                        # 💡 時間範圍篩選條件
+                        "updated_time": {
+                            "$gte": time_interval[0],
+                            "$lte": time_interval[1]
+                        },
+                        
+                        # 💡 其他條件 (例如確保 title 存在)
+                        "title": {
+                            "$exists": True
+                        }
+                    }
+                }
+                # 您可以根據需要在此處添加其他階段，如 $sort, $limit 等
+            ]
+
+        
+
+        df = pd.DataFrame(database[collection_name].aggregate(pipeline))
+
+        if df.empty:
+            df = pd.DataFrame(columns = ["_id", "title", "url", "type", "updated_time", "content", "len", "keywords"])
+
+        return pd.DataFrame(df)
+
+    @staticmethod
+    def SELECT_BY_QUERY(collection_name, time_interval, keyword_query):
+        kw_ls = keyword_query.split(",")
+        df_ls = []
+        for kw in kw_ls:
+            df = MongoDbManager.SELECT_BY_KEYWORD(collection_name, time_interval, kw)
+            df_ls.append(df)
+        df_final = pd.concat(df_ls)
+        df_final = df_final.drop_duplicates(subset = ['_id'])
+        
+        return df_final
+
 class DataTools:
 
      # --- Transform Picture to Base64

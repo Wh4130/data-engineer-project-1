@@ -83,7 +83,7 @@ class UDN_scraper:
 
                 kw_container = article.find("section", id = 'keywords')
                 keywords = [
-                    kw.text for kw in kw_container.find_all("a")
+                    kw.text.replace("#", "") for kw in kw_container.find_all("a")
                 ]
                 
                 self.scraped_results.append(
