@@ -11,10 +11,15 @@ urls = {"bubble_tea": "https://dssq-bubble-tea-m9jzmospevfsw8uh2ncz4o.streamlit.
         "media_dashboard": "https://taiwan-media-dashboard-tool.streamlit.app/"}
 
 def awaken_sleeping_apps():
+    options = webdriver.ChromeOptions()
+    options.add_argument("--headless=new")           # 無頭模式（不開視窗）
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")  # 避免 shared memory 不夠用
+    options.add_argument("--disable-gpu") 
 
     print("Logging streamlit apps...")
 
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome(options)
 
     for title, url in urls.items():
         # Open a web page

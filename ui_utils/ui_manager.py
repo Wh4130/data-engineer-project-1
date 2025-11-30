@@ -92,10 +92,12 @@ class P_network_graph:
 
         pos = nx.spring_layout(G)
         nx.set_node_attributes(G, pos, 'pos')
-        return G
+        return kws, G
 
     @staticmethod
-    def plot(G: nx.Graph) -> go.Figure:
+    def plot(kws, G: nx.Graph) -> go.Figure:
+
+        kws = [{elm[0]: elm[1]['count']} for elm in kws]
         """
         將 NetworkX 圖轉換為 Plotly 圖形，使用 G.degree() 進行高效的連線數計算。
         
@@ -135,6 +137,7 @@ class P_network_graph:
         node_x = []
         node_y = []
         node_adjacencies = []
+        node_size = []
         node_text = []
 
         # 使用 G.nodes(data=False) 迭代節點名稱
@@ -147,12 +150,14 @@ class P_network_graph:
             # 獲取連線數 (從 Degree 字典中獲取)
             num_connections = degree_dict.get(node, 0)
             node_adjacencies.append(num_connections)
+
+            # 獲取節點 tag 的文章提及數
+            mentioned = G.nodes[node]["count"]
             
             # 創建懸停文本
-            node_text.append(f"{node}, # of connections: {num_connections}")
+            node_text.append(f"{node}, # of connections: {num_connections}, # of mentioning articles: {mentioned}")
 
         # --- 3. 節點追蹤：使用收集的數據 ---
-        
         node_trace = go.Scatter(
             x=node_x, y=node_y,
             mode='markers',

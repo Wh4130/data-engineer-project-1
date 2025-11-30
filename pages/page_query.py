@@ -119,7 +119,7 @@ if query:
          
     with TABS[1].container(border = True):
         with st.spinner("Calculating tag network...", show_time = True):
-            G = P_network_graph.create_graph(df_final)
-            nx_fig = P_network_graph.plot(G)
+            kws, G = P_network_graph.create_graph(df_final)
+            nx_fig = P_network_graph.plot(kws, G)
             st.plotly_chart(nx_fig)
 # 
