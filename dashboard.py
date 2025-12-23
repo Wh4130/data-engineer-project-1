@@ -516,20 +516,20 @@ with st.container(border = True):
             st.session_state["dashboard"]["wc_data"] = WordCloudManager.worcdloud_generate(sliced_data, width = 800, height = 1500)
         st.rerun()
 
-    cl, cr = st.columns(2)
-    with cl:
-        wordcloud = st.pyplot(st.session_state["dashboard"]["wc_data"][1])
-    with cr:
-        data = pd.DataFrame(st.session_state["dashboard"]["wc_data"][0].items(),
-                            columns = ["word", "count"]).sort_values("count")
-        fig_wcount = go.Figure(go.Bar(
-            x=data['count'],
-            y=data['word'],
-            orientation='h'))
-        fig_wcount.update_layout(
-            height = 700
-        )
-        st.plotly_chart(fig_wcount)
+        cl, cr = st.columns(2)
+        with cl:
+            wordcloud = st.pyplot(st.session_state["dashboard"]["wc_data"][1])
+        with cr:
+            data = pd.DataFrame(st.session_state["dashboard"]["wc_data"][0].items(),
+                                columns = ["word", "count"]).sort_values("count")
+            fig_wcount = go.Figure(go.Bar(
+                x=data['count'],
+                y=data['word'],
+                orientation='h'))
+            fig_wcount.update_layout(
+                height = 700
+            )
+            st.plotly_chart(fig_wcount)
 
 
 
