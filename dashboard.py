@@ -512,9 +512,7 @@ with st.container(border = True):
 
     generate_btn = st.button(btn_str, width = 'stretch', type = "primary", key = "gen_wc")
     if generate_btn:
-        with st.spinner("Generating wordcloud..."):
-            st.session_state["dashboard"]["wc_data"] = WordCloudManager.worcdloud_generate(sliced_data, width = 800, height = 1500)
-        st.rerun()
+        st.session_state["dashboard"]["wc_data"] = WordCloudManager.worcdloud_generate(sliced_data, width = 800, height = 1500)
 
         cl, cr = st.columns(2)
         with cl:
