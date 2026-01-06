@@ -17,7 +17,7 @@ class WordCloudManager:
     @staticmethod
     def worcdloud_generate(data, width = 400, height = 600):
 
-        with st.spinner("generating wordcloud..."):
+        with st.status("generating wordcloud...") as status:
 
             x, y = np.ogrid[:300, :300]
             mask = (x - 150)**2 + (y - 150)**2 > 150**2
@@ -27,8 +27,10 @@ class WordCloudManager:
             '''
             text should be separated by comma
             '''
+            status.update(label = "removing comma...")
             text = ' '.join(data.loc[:, 'content'].astype(str)).replace(' ', ', ')
 
+            status.update(label = "setting up jieba engine...")
             jieba.set_dictionary(DICTIONARY_PATH)
             jieba.analyse.set_stop_words(STOPWORDS_PATH)
 
@@ -36,6 +38,7 @@ class WordCloudManager:
             seg_list = jieba.lcut(text, cut_all = False)
             dictionary = Counter(seg_list)
 
+            status.update(label = "computing word frequency...")
             freq = {}
             for ele in dictionary:
                 if ele == "APP":
@@ -44,6 +47,7 @@ class WordCloudManager:
                     if not re.match(r"\d+", ele):
                         freq[ele] = dictionary[ele]
 
+            status.update(label = "creating wordcloud object...")
             # Create and generate a word cloud image:
             wordcloud = WordCloud(
                 background_color=None,  # No background color
@@ -56,6 +60,7 @@ class WordCloudManager:
             ).generate_from_frequencies(freq)
 
 
+            status.update(label = "converting to figure object...")
             fig, ax = plt.subplots(1, 1)
             ax.imshow(wordcloud, interpolation = 'bilinear')
             ax.axis('off')

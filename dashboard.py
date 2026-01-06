@@ -500,37 +500,38 @@ with st.container(border = True):
 
 
 
+@st.fragment
+def WC_Frag():
 
+    with st.container(border = True):
+        st.write("###### WordCloud")
 
-with st.container(border = True):
-    st.write("###### WordCloud (Manual generation required!)")
+        # - initializing wordcloud plot
+        if "wc_data" not in st.session_state["dashboard"]:
+            btn_str = "Generate"
+        else:
+            btn_str = "Regenerate"
 
-    # - initializing wordcloud plot
-    if "wc_data" not in st.session_state["dashboard"]:
-        btn_str = "Generate"
-    else:
-        btn_str = "Regenerate"
+        generate_btn = st.button(btn_str, width = 'stretch', type = "primary", key = "gen_wc")
+        if generate_btn:
+            st.session_state["dashboard"]["wc_data"] = WordCloudManager.worcdloud_generate(sliced_data, width = 800, height = 1500)
 
-    generate_btn = st.button(btn_str, width = 'stretch', type = "primary", key = "gen_wc")
-    if generate_btn:
-        st.session_state["dashboard"]["wc_data"] = WordCloudManager.worcdloud_generate(sliced_data, width = 800, height = 1500)
+            cl, cr = st.columns(2)
+            with cl:
+                wordcloud = st.pyplot(st.session_state["dashboard"]["wc_data"][1])
+            with cr:
+                data = pd.DataFrame(st.session_state["dashboard"]["wc_data"][0].items(),
+                                    columns = ["word", "count"]).sort_values("count")
+                fig_wcount = go.Figure(go.Bar(
+                    x=data['count'],
+                    y=data['word'],
+                    orientation='h'))
+                fig_wcount.update_layout(
+                    height = 700
+                )
+                st.plotly_chart(fig_wcount)
 
-        cl, cr = st.columns(2)
-        with cl:
-            wordcloud = st.pyplot(st.session_state["dashboard"]["wc_data"][1])
-        with cr:
-            data = pd.DataFrame(st.session_state["dashboard"]["wc_data"][0].items(),
-                                columns = ["word", "count"]).sort_values("count")
-            fig_wcount = go.Figure(go.Bar(
-                x=data['count'],
-                y=data['word'],
-                orientation='h'))
-            fig_wcount.update_layout(
-                height = 700
-            )
-            st.plotly_chart(fig_wcount)
-
-
+WC_Frag()
 
 
 # TODO * 4. 情感分析引擎？ textblob
