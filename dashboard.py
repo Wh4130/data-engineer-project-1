@@ -38,7 +38,7 @@ UIManager.render_sidebar()
 
 # * ------------------------------------------------------------------------------
 # *** --- session state init ---
-with st.spinner("Initializing dashboard... (It takes about 30 seconds)"):
+with st.spinner("Initializing dashboard..."):
 
     if "dashboard" not in st.session_state:
         st.session_state["dashboard"] = {}
@@ -47,7 +47,7 @@ with st.spinner("Initializing dashboard... (It takes about 30 seconds)"):
         st.session_state["dashboard"]["df_full"] = MongoDbManager.SELECT_ALL_BY_TIME([dt.datetime.now() - dt.timedelta(days = 7), dt.datetime.now()])
 
         # - default: past 7 day data
-        st.session_state["dashboard"]["df_7day"] = st.session_state["dashboard"]["df_full"].copy()
+        # st.session_state["dashboard"]["df_7day"] = st.session_state["dashboard"]["df_full"].copy()
 
         # - initializing filter toggles
         st.session_state['dashboard']['toggle_source'] = True
@@ -157,18 +157,19 @@ if on_click:
 sliced_data = st.session_state['dashboard']['df_full'][
     (st.session_state['dashboard']['df_full']['source'].isin(input_sources))
 ]
-sliced_data_kwt = st.session_state['dashboard']['df_7day'][
-    (st.session_state['dashboard']['df_7day']['source'].isin(input_sources))
-]
+# sliced_data_kwt = st.session_state['dashboard']['df_7day'][
+#     (st.session_state['dashboard']['df_7day']['source'].isin(input_sources))
+# ]
 
 sliced_data = sliced_data[
     (sliced_data['type'].isin(input_types))
 ]
-sliced_data_kwt = sliced_data_kwt[
-    (sliced_data_kwt['type'].isin(input_types))
-]
+# sliced_data_kwt = sliced_data_kwt[
+#     (sliced_data_kwt['type'].isin(input_types))
+# ]
 
-if sliced_data.empty or sliced_data_kwt.empty:
+# if sliced_data.empty or sliced_data_kwt.empty:
+if sliced_data.empty:
     st.error("No data available! Loose your filter to get more data.")
     st.stop()
 
@@ -280,7 +281,7 @@ with st.container():
 # * --- article keyword dashboard
 
 with st.container():
-    st.markdown("##### Overall Keyword Trend - Top 3 Article Keywords in the past 7 days", help = """① Source LTN（自由時報）has no attribute 'keywords', so keywords statistics are relevant to other sources only. 
+    st.markdown("##### Overall Keyword Trend - Top 3 Article Keywords", help = """① Source LTN（自由時報）has no attribute 'keywords', so keywords statistics are relevant to other sources only. 
                  
 ② Keyword statistics are calculated tracing back to past 7 days, no matter how you select your raw data.
 """)
@@ -288,18 +289,18 @@ with st.container():
     cols_r2 = st.columns(3)
 
 # st.session_state['dashboard']['df_7day']
-    for i, tag in zip([0, 1, 2], P1_Keywords.get_top_k_tags(sliced_data_kwt, 3)):
+    for i, tag in zip([0, 1, 2], P1_Keywords.get_top_k_tags(sliced_data, 3)):
         with cols_r2[i]:
-            tag_series = P1_Keywords.get_kw_count_ts(sliced_data_kwt, tag)
+            tag_series = P1_Keywords.get_kw_count_ts(sliced_data, tag)
             P1_Keywords.plot_single_kw_count(tag, tag_series)
 
 with st.container():
     with st.spinner("computing keyword trends..."):
-        st.markdown("##### Top 100 Article Keywords in the past 7 days")
-        tags = list(P1_Keywords.kw_trans_func(sliced_data_kwt['keywords']).keys())[:100]
+        st.markdown("##### Top 100 Article Keywords")
+        tags = list(P1_Keywords.kw_trans_func(sliced_data['keywords']).keys())[:100]
         tag_df = pd.DataFrame(columns = ["tag", "ts"])
         for tag in tags:
-            tag_df.loc[len(tag_df), ["tag", "ts"]] = [tag, P1_Keywords.get_kw_count_ts(sliced_data_kwt, tag)]
+            tag_df.loc[len(tag_df), ["tag", "ts"]] = [tag, P1_Keywords.get_kw_count_ts(sliced_data, tag)]
         tag_df['total'] = tag_df.apply(lambda row: int(sum(row['ts'])), axis = 1)
 
         tag_df = tag_df.sort_values("total", ascending = False)
