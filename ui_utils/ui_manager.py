@@ -19,7 +19,6 @@ class UIManager:
             # st.caption(f"**Literature Review Tool**")
 
             # * Pages
-            st.page_link("./pages/page_about.py", label = 'About this app', icon = ":material/help:")
             st.page_link("dashboard.py", label = 'Dashboard', icon = ":material/widgets:")
             st.page_link("./pages/page_query.py", label = 'News Querying Tool', icon = ":material/feature_search:")
 

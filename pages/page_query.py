@@ -111,48 +111,44 @@ if query:
             ]
             ))
 
-
-    TABS = st.tabs(["Result Data", "Tag Network"])
-    # ** tag network graph
-    with TABS[0]:
-        st.dataframe(
-             df_final,
-             column_config = {
-                  "_id": None,
-                  "title": st.column_config.TextColumn(
-                       "Title",
-                       width = "large"
-                  ),
-                  "url": st.column_config.LinkColumn(
-                       "Link",
-                       width = "small",
-                       display_text=":material/link:"
-                  ),
-                  "type": st.column_config.TextColumn(
-                       "Category",
-                       width = "small"
-                  ),
-                  "updated_time": st.column_config.DatetimeColumn(
-                       "Updated Time",
-                       width = "medium",
-                       format = "D MMM YYYY, h:mm a"
-                  ),
-                  "content": st.column_config.TextColumn(
-                       "Content",
-                       width = "small"
-                  ),
-                  "len": st.column_config.ProgressColumn(
-                       "Content Length",
-                       width = "medium",
-                       max_value = 3000,
-                       format = "compact"
-                  ),
-             }
-            )
+    st.dataframe(
+            df_final,
+            column_config = {
+                "_id": None,
+                "title": st.column_config.TextColumn(
+                    "Title",
+                    width = "large"
+                ),
+                "url": st.column_config.LinkColumn(
+                    "Link",
+                    width = "small",
+                    display_text=":material/link:"
+                ),
+                "type": st.column_config.TextColumn(
+                    "Category",
+                    width = "small"
+                ),
+                "updated_time": st.column_config.DatetimeColumn(
+                    "Updated Time",
+                    width = "medium",
+                    format = "D MMM YYYY, h:mm a"
+                ),
+                "content": st.column_config.TextColumn(
+                    "Content",
+                    width = "small"
+                ),
+                "len": st.column_config.ProgressColumn(
+                    "Content Length",
+                    width = "medium",
+                    max_value = 3000,
+                    format = "compact"
+                ),
+            }
+        )
          
-    with TABS[1].container(border = True):
-        with st.spinner("Calculating tag network...", show_time = True):
-            kws, G = P_network_graph.create_graph(df_final)
-            nx_fig = P_network_graph.plot(kws, G)
-            st.plotly_chart(nx_fig)
+    # with TABS[1].container(border = True):
+    #     with st.spinner("Calculating tag network...", show_time = True):
+    #         kws, G = P_network_graph.create_graph(df_final)
+    #         nx_fig = P_network_graph.plot(kws, G)
+    #         st.plotly_chart(nx_fig)
 # 
