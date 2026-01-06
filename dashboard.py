@@ -281,9 +281,7 @@ with st.container():
 # * --- article keyword dashboard
 
 with st.container():
-    st.markdown("##### Overall Keyword Trend - Top 3 Article Keywords", help = """① Source LTN（自由時報）has no attribute 'keywords', so keywords statistics are relevant to other sources only. 
-                 
-② Keyword statistics are calculated tracing back to past 7 days, no matter how you select your raw data.
+    st.markdown("##### Overall Keyword Trend - Top 3 Article Keywords", help = """Source LTN（自由時報）has no attribute 'keywords', so keywords statistics are relevant to other sources only. 
 """)
 
     cols_r2 = st.columns(3)
