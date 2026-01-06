@@ -2,7 +2,7 @@
 > In light of the absense of a database that stores Taiwanese news in a pool, I designed data pipeline and a streamlit UI to enhance the access to Taiwanese news data, especially for data scientists and NLP specialists. 
 > This data engineering project automates and schedules the process of dynamic webscraping from three main media in Taiwan: CNA (中央社), UDN (聯合新聞網), and LTN (自由時報). 
 
-📍Visit the dashboard here: [News Dashboard](https://taiwan-media-dashboard-tool.streamlit.app/)
+📍Visit the dashboard [here](https://taiwan-media-dashboard-tool.streamlit.app/)!
 
 ## Technology
 |Aspect | Technology |
