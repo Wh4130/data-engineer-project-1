@@ -60,7 +60,7 @@ class MongoDbManager:
             time_interval: list[dt.datetime]):      
         
         ###! 實驗後發現單線程會比較快！驚訝
-        async_on = True
+        async_on = False
         
         collections = media_sources.keys()
         df_list = []
