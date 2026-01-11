@@ -43,9 +43,12 @@ with st.spinner("Initializing dashboard..."):
     if "dashboard" not in st.session_state:
         st.session_state["dashboard"] = {}
 
+        # - default: past 7 day
+        st.session_state['interval'] = DataTools.get_time_without_minute_and_second(day_delta = 5)
+
         # - default: past 7 day data
         st.session_state["dashboard"]["df_full"] = MongoDbManager.SELECT_ALL_BY_TIME(
-            DataTools.get_time_without_minute_and_second()
+            st.session_state['interval']
         )
 
         # - default: past 7 day data
@@ -75,24 +78,45 @@ with st.sidebar:
 
 # * source data interval filter
 with BOX1:
+    
+    @st.fragment
+    def update_source_data_ui():
+        st.write("#### :material/database: Source Data")
+        date_col, time_col = st.columns(2)
 
-    st.write("#### :material/database: Source Data")
-    date_col, time_col = st.columns(2)
+        with date_col:
+            day1 = st.date_input("start date", value = st.session_state['interval'][0])
+            day2 = st.date_input("end date", value = st.session_state['interval'][1])
+        with time_col:
+            time1 = st.time_input("start time")
+            time2 = st.time_input("end time")
 
-    with date_col:
-        day1 = st.date_input("start date", value = dt.date.today() - dt.timedelta(days = 7))
-        day2 = st.date_input("end date", value = dt.date.today())
-    with time_col:
-        time1 = st.time_input("start time")
-        time2 = st.time_input("end time")
-
-    dt1 = dt.datetime.combine(day1, time1).replace(tzinfo = ZoneInfo("Asia/Taipei"))
-    dt2 = dt.datetime.combine(day2, time2).replace(tzinfo = ZoneInfo("Asia/Taipei"))
+        dt1 = dt.datetime.combine(day1, time1).replace(tzinfo = ZoneInfo("Asia/Taipei"))
+        dt2 = dt.datetime.combine(day2, time2).replace(tzinfo = ZoneInfo("Asia/Taipei"))
 
 
-    # * apply change on time interval
-    on_click = st.button("Apply change", width = 'stretch', type = 'primary',
-                        help = "Clicking this button will update the dashboard based on the selected time interval.")
+        # * apply change on time interval
+        on_click = st.button("Apply change", width = 'stretch', type = 'primary',
+                            help = "Clicking this button will update the dashboard based on the selected time interval.")
+        
+        if on_click:
+            # * clear cache to avoid stale data
+            st.cache_data.clear()
+
+            st.session_state['interval'] = [dt1, dt2]
+
+            # - at least two hours
+            cond = dt2 - dt1 >= dt.timedelta(days = 2)
+
+            if not cond:
+                st.error("Please select a time interval of at least **two days**.")
+                st.stop()
+
+            # * update session state full dashboard data
+            st.session_state['dashboard']['df_full'] = MongoDbManager.SELECT_ALL_BY_TIME([dt1, dt2])
+
+            st.rerun()
+    update_source_data_ui()
         
 # * source filter
 with BOX2:
@@ -136,19 +160,7 @@ with BOX2:
 
 # * ------------------------------------------------------------------------------
 # *** --- "Apply change" button
-if on_click:
-    # * clear cache to avoid stale data
-    st.cache_data.clear()
 
-    # - at least two hours
-    cond = dt2 - dt1 >= dt.timedelta(days = 2)
-
-    if not cond:
-        st.error("Please select a time interval of at least **two days**.")
-        st.stop()
-
-    # * update session state full dashboard data
-    st.session_state['dashboard']['df_full'] = MongoDbManager.SELECT_ALL_BY_TIME([dt1, dt2])
 
 
 
@@ -243,13 +255,13 @@ with st.container():
     <div class="data-pair-container">
         <div class="data-block">
             <span class="data-label">from</span>
-            <span class="data-number date">{dt1.strftime('%y/%m/%d')}</span>
-            <span class="data-label time">{dt1.strftime('%H:%M')}</span>
+            <span class="data-number date">{st.session_state['interval'][0].strftime('%y/%m/%d')}</span>
+            <span class="data-label time">{st.session_state['interval'][0].strftime('%H:%M')}</span>
         </div>
         <div class="data-block">
             <span class="data-label">to</span>
-            <span class="data-number date">{dt2.strftime('%y/%m/%d')}</span>
-            <span class="data-label time">{dt2.strftime('%H:%M')}</span>
+            <span class="data-number date">{st.session_state['interval'][1].strftime('%y/%m/%d')}</span>
+            <span class="data-label time">{st.session_state['interval'][1].strftime('%H:%M')}</span>
         </div>
     </div>""", unsafe_allow_html = True)
 

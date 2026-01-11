@@ -9,6 +9,9 @@ import asyncio
 import pandas as pd
 import base64
 
+import sys 
+
+
 from utils.constants import media_sources
 from typing import List
 # load_dotenv()
@@ -58,6 +61,8 @@ class MongoDbManager:
     @staticmethod
     def SELECT_ALL_BY_TIME(
             time_interval: list[dt.datetime]):      
+        
+        st.cache_data.clear()
         
         ###! 實驗後發現單線程會比較快！驚訝
         async_on = False
@@ -169,7 +174,7 @@ class DataTools:
         
 
     @staticmethod
-    def get_time_without_minute_and_second() -> List:
+    def get_time_without_minute_and_second(day_delta = 7) -> List:
         now_raw = dt.datetime.now()
         now = now_raw.replace(
             hour = (now_raw.hour // 2) * 2,
@@ -177,7 +182,7 @@ class DataTools:
             second = 0,
             microsecond = 0
         )
-        prev = now - dt.timedelta(days = 7)
+        prev = now - dt.timedelta(days = day_delta)
         return [prev, now]
     
 
@@ -194,3 +199,5 @@ class MathTools:
         upper_bound = Q3 + 1.5 * IQR
         filtered_array = array[(array >= lower_bound) & (array <= upper_bound)]
         return filtered_array
+    
+
